@@ -1,0 +1,86 @@
+import java.util.Scanner;
+import java.io.File;
+public class Main {
+    static int row0;
+    static int column0;
+    static int row;
+    static int column;
+    public static char[][] maze;
+    
+    public static boolean solve(int r, int c){
+        if(maze[r][c] == '-')
+            return true;
+        maze[r][c] = '+';
+        if(c<maze[0].length && (r-1<maze.length) && (maze[r-1][c] == ' ' || maze[r-1][c] == '-')) {
+            if(solve(r-1,c) == true) {
+               return true;
+            }
+            else {
+               maze[r-1][c] = '.';
+            }
+        }
+        if(c<maze[0].length && (r+1<maze.length) && (maze[r+1][c] == ' ' || maze[r+1][c] == '-')) {
+            if(solve(r+1,c) == true){ex
+               return true;
+            }
+            else {
+               maze[r+1][c] = '.';
+            }
+        }
+        if(c+1<maze[0].length && (r<maze.length) && (maze[r][c+1] == ' ' || maze[r][c+1] == '-')) {
+            if(solve(r,c+1) == true) {
+               return true;
+            }
+            else {
+               maze[r][c+1] = '.';
+            }
+        }
+        if(c-1<maze[0].length && (r<maze.length) && (maze[r][c-1] == ' ' || maze[r][c-1] == '-')) {
+            if(solve(r,c-1) == true) {
+               return true;
+            }
+            else {
+               maze[r][c-1] = '.';
+            }
+        }
+        return false;
+    }
+    
+    public static void main(String[] args) {
+        File in = new File("maze.dat");
+        try(Scanner scanner = new Scanner(in)){
+            String line[] = scanner.nextLine().split(" ");
+            column = Integer.parseInt(line[1]);
+            row = Integer.parseInt(line[0]);
+            maze = new char[row][column];
+            while(scanner.hasNext()){
+               String tmp=null;
+               for(int j = 0; j < row; j++) {
+                  if(row >= j) 
+                     tmp = scanner.nextLine();
+                  for(int k = 0; k < tmp.length(); k++) {
+                     maze[j][k] = tmp.charAt(k);
+                     if(maze[j][k] == '+') {
+                        column0 = k;
+                        row0 = j;
+                     }
+                  }
+               }
+            }
+        }
+        catch(Exception e) {
+            System.err.println(e);
+        }
+        if(solve(row0, column0) == false) 
+            System.out.println("No Path Found. Not Solved.");
+        else {
+            System.out.println("Path Found. Solved.");
+            for(int i =0; i<row; i++){
+               for(int j = 0; j<column; j++) {
+                  System.out.print(maze[i][j]);
+               }
+               System.out.println("");
+            }
+        }
+    }   
+}
